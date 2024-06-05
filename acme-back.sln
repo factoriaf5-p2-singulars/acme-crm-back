@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "acme-back", "acme-back\acme-back.csproj", "{CAB41735-E2A2-49C6-9D00-2F0BFBBC98B9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "acme-back", "acme-back\acme-back.csproj", "{2B2C1E35-A2E9-4011-888C-30A76766E4DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -8,9 +8,9 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CAB41735-E2A2-49C6-9D00-2F0BFBBC98B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CAB41735-E2A2-49C6-9D00-2F0BFBBC98B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CAB41735-E2A2-49C6-9D00-2F0BFBBC98B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CAB41735-E2A2-49C6-9D00-2F0BFBBC98B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B2C1E35-A2E9-4011-888C-30A76766E4DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B2C1E35-A2E9-4011-888C-30A76766E4DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B2C1E35-A2E9-4011-888C-30A76766E4DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B2C1E35-A2E9-4011-888C-30A76766E4DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
