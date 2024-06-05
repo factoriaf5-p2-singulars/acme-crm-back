@@ -33,14 +33,10 @@ namespace acme_back.Product
         }
 
         [HttpPost]
-        public async Task<ActionResult<ProductDto>> CreateProduct(CreateProductDto createProductDto)
+        public async Task<ActionResult<ProductDto>> CreateProduct(IProductRepository repository, CreateProductDto createProductDto)
         {
-            var product = new Product
-            {
-                Name = createProductDto.Name
-            };
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
+            var product = await repository.CreateProduct(createProductDto);
+            
             return Ok(product);
         }
 
