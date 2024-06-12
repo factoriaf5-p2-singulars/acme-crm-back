@@ -1,4 +1,4 @@
-namespace acme_back.Customer;
+namespace acme_crm.Customers;
 
 public class CreateCustomerDto
 {
