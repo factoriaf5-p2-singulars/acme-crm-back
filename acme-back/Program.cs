@@ -2,13 +2,17 @@ using acme_back.Data;
 using acme_back.Migrations;
 using acme_crm.Customers;
 using acme_crm.Product;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    var conStrBuilder = new SqlConnectionStringBuilder(builder.Configuration.GetConnectionString("DefaultConnection"));
+    conStrBuilder.Password = builder.Configuration["SecretSection:DbPassword"];
+    var connection = conStrBuilder.ConnectionString;
+    options.UseSqlServer(connection);
 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
