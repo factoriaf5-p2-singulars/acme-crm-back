@@ -18,7 +18,7 @@ public class CustomerRepository : ICustomerRepository
     
     public async Task<IEnumerable<Customer>> GetAllCustomer()
     {
-        return await _context.Customers.ToListAsync();
+        return await _context.Customers.Include(x=>x.Product).ToListAsync();
     }
 
     public async Task<int> CreateCustomer(Customer customer)

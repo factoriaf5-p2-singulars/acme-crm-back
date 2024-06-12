@@ -12,7 +12,7 @@ public class AutoMapperProfiles: Profile
         CreateMap<Product.Product, ProductDto>();
         CreateMap<CreateProductDto, Product.Product>();
 
-        CreateMap<Customer, CustomerDto>();
+        CreateMap<Customer, CustomerDto>().ForMember(des=>des.Product, opt=>opt.MapFrom(src=>src.Product));
         CreateMap<CreateCustomerDto, Customer>();
 
     }

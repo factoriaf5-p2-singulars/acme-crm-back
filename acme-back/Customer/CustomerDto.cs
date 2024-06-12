@@ -8,5 +8,5 @@ public class CustomerDto
     public string Name { get; set; } = null!;
     public DateTime EntryDate { get; set; } 
     
-
+    public List<ProductDto> Product { get; set; }
 }

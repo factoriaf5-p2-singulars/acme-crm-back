@@ -44,10 +44,10 @@ namespace acme_crm.Product
         }
         
         [HttpPost]
-        public async Task<IActionResult> CreateProduct(CreateProductDto createProductDto, ICustomerRepository customerRepository)
+        public async Task<IActionResult> CreateProduct(int customerId,CreateProductDto createProductDto, ICustomerRepository customerRepository)
         {
-          
             var product = _mapper.Map<Product>(createProductDto);
+            product.CustomerId = customerId;
             await _productRepository.CreateProduct(product);
             return Ok(product);
         }
