@@ -2,6 +2,7 @@ using acme_back.Data;
 using acme_back.Migrations;
 using acme_crm.Customers;
 using acme_crm.Product;
+using acme_crm.Utils;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<IFileStorage, LocalFileStorage>();
+// para poder acceder a la información del local storage
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddAutoMapper(typeof(Program));
 var app = builder.Build();
 

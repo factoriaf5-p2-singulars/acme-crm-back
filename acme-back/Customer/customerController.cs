@@ -1,4 +1,5 @@
 using acme_back.Data;
+using acme_crm.Utils;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -14,6 +15,7 @@ namespace acme_crm.Customers
         private readonly ApplicationDBContext _context;
         private readonly IMapper _mapper;
         private readonly ICustomerRepository _repository;
+        private readonly IFileStorage _fileStorage;
         
         public customerController(ApplicationDBContext context, ICustomerRepository repository, IMapper mapper)
         {
@@ -35,8 +37,13 @@ namespace acme_crm.Customers
         public async Task<ActionResult<CustomerDto>> CreateCustomer(CreateCustomerDto createCustomerDto)
         {
             var customer = _mapper.Map<Customer>(createCustomerDto);
-            var id = await _repository.CreateCustomer(customer);
-           return Ok(customer);
+            if(createCustomerDto.Avatar != null)
+            {
+                string url = await _fileStorage.Storage(container:"customer", createCustomerDto.Avatar);
+                customer.Avatar = url;
+            }
+            await _repository.CreateCustomer(customer);
+            return Ok(customer);
         }
         
         [HttpPut("{id:int}")]

@@ -1,5 +1,6 @@
 using acme_back.Data;
 using acme_crm.Customers;
+using acme_crm.Utils;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -15,8 +16,9 @@ namespace acme_crm.Product
         private readonly ApplicationDBContext _context;
         private readonly IMapper _mapper;
         private readonly IProductRepository _productRepository;
+        private readonly IFileStorage _fileStorage;
         
-        public productController(ApplicationDBContext context, IProductRepository productRepository, IMapper mapper)
+        public productController(ApplicationDBContext context,IFileStorage _fileStorage, IProductRepository productRepository, IMapper mapper)
         {
             _context = context;
             _productRepository = productRepository;
@@ -47,6 +49,11 @@ namespace acme_crm.Product
         public async Task<IActionResult> CreateProduct(int customerId,CreateProductDto createProductDto, ICustomerRepository customerRepository)
         {
             var product = _mapper.Map<Product>(createProductDto);
+            if(createProductDto.Photo != null)
+            {
+                string url = await _fileStorage.Storage(container:"product", createProductDto.Photo);
+                product.Photo = url;
+            }
             product.CustomerId = customerId;
             await _productRepository.CreateProduct(product);
             return Ok(product);

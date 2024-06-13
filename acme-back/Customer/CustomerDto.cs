@@ -7,6 +7,7 @@ public class CustomerDto
     public int Id { get; set; }
     public string Name { get; set; } = null!;
     public DateTime EntryDate { get; set; } 
+    public string? Avatar { get; set; }
     
     public List<ProductDto> Product { get; set; }
 }
