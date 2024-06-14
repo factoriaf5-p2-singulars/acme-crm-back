@@ -12,8 +12,8 @@ using acme_back.Data;
 namespace acme_back.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240613140221_Files")]
-    partial class Files
+    [Migration("20240614075919_FilesAdd")]
+    partial class FilesAdd
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,9 @@ namespace acme_back.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Avatar")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("EntryDate")
                         .HasColumnType("datetime2");

@@ -1,5 +1,6 @@
 using acme_back.Data;
 using acme_back.Migrations;
+using acme_back.Uitilitis.Services;
 using acme_crm.Customers;
 using acme_crm.Product;
 using acme_crm.Utils;
@@ -28,7 +29,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseStaticFiles();
 app.MapControllers();
 app.UseHttpsRedirection();
 

@@ -1,8 +1,9 @@
 using acme_back.Data;
+using acme_back.Uitilitis.Services;
+using acme_crm.Customers;
 using acme_crm.Utils;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,59 +11,70 @@ namespace acme_crm.Customers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class customerController:  ControllerBase
+    public class CustomerController : ControllerBase
     { 
         private readonly ApplicationDBContext _context;
         private readonly IMapper _mapper;
-        private readonly ICustomerRepository _repository;
+        private readonly ICustomerRepository _customerRepository;
         private readonly IFileStorage _fileStorage;
-        
-        public customerController(ApplicationDBContext context, ICustomerRepository repository, IMapper mapper)
+
+        public CustomerController(ApplicationDBContext context, IFileStorage fileStorage, ICustomerRepository customerRepository, IMapper mapper)
         {
             _context = context;
-            _repository = repository;
+            _fileStorage = fileStorage;
+            _customerRepository = customerRepository;
             _mapper = mapper;
         }
-        
+
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CustomerDto>>> GetCustomers()
+        public async Task<ActionResult<List<CustomerDto>>> GetAllCustomers()
         {
-            var customers = await _repository.GetAllCustomer();
-            var customerDtos = _mapper.Map<IEnumerable<CustomerDto>>(customers);
+            var customers = await _customerRepository.GetAllCustomer();
+            var customerDtos = _mapper.Map<List<CustomerDto>>(customers);
             return Ok(customerDtos);
         }
-        
-        
-        [HttpPost]
-        public async Task<ActionResult<CustomerDto>> CreateCustomer(CreateCustomerDto createCustomerDto)
+
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<CustomerDto>> GetCustomerById(int id)
         {
-            var customer = _mapper.Map<Customer>(createCustomerDto);
-            if(createCustomerDto.Avatar != null)
+            var customer = await _context.Customers.FindAsync(id);
+            if (customer == null)
             {
-                string url = await _fileStorage.Storage(container:"customer", createCustomerDto.Avatar);
+                return NotFound();
+            }
+            var customerDto = _mapper.Map<CustomerDto>(customer);
+            return Ok(customerDto);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<CustomerDto>>  CreateCustomer(CreateCustomerDto createCustomerDto)
+        {
+
+            var customer = _mapper.Map<Customer>(createCustomerDto);
+            if (createCustomerDto.Avatar != null)
+            {
+                string url = await _fileStorage.Storage("customer", createCustomerDto.Avatar);
                 customer.Avatar = url;
             }
-            await _repository.CreateCustomer(customer);
+
+            await _customerRepository.CreateCustomer(customer);
             return Ok(customer);
         }
-        
+
         [HttpPut("{id:int}")]
-        public async Task<Results<NoContent,NotFound>> UpdateCustomer(int id, [FromBody]CustomerDto updateCustomerDto)
+        public async Task<ActionResult> UpdateCustomer(int id, [FromBody] CreateCustomerDto updateCustomerDto)
         {
-            var exist = await _repository.ExistCustomer(id);
-
-            if (!exist)
+            var customer = await _context.Customers.FindAsync(id);
+            if (customer == null)
             {
-                return TypedResults.NotFound();
+                return NotFound();
             }
-    
-            var customer = _mapper.Map<Customer>(updateCustomerDto);
-            customer.Id = id;
 
-            await _repository.UpdateCustomer(customer);
-            return TypedResults.NoContent();
+            _mapper.Map(updateCustomerDto, customer);
+            await _customerRepository.UpdateCustomer(customer);
+            return NoContent();
         }
-        
+
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> DeleteCustomer(int id)
         {
@@ -71,6 +83,7 @@ namespace acme_crm.Customers
             {
                 return NotFound();
             }
+
             _context.Customers.Remove(customer);
             await _context.SaveChangesAsync();
             return NoContent();
